@@ -52,4 +52,4 @@ process
   new skB:sskey;
   let pkA = pk(skA) in out(c,pkA);
   let pkB = spk(skB) in out(c,pkB);
-  ( (!clientA(pkA,skA,pkB)) | (!serverB(pkB,skB)))
+  ((!clientA(pkA,skA,pkB)) | (!serverB(pkB,skB)))
