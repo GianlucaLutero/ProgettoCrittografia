@@ -16,9 +16,28 @@
 \section*{Introduzione}
 \section*{Calcolo dei processi}
 % Descrivere brevemente sintassi e semantica del calcolo dei processi
+Per rappresentare i protocolli viene utilizzato il formalismo del calcolo dei processi con l'aggiunta delle primitive crittografiche probabilistiche. Di seguito viene mostrata la sintassi:\\
+\\
+\begin{itemize}
+    \item $M, N ::= Var \hspace{3mm}|\hspace{3mm} Name \hspace{3mm}|\hspace{3mm} f(M_1, \dots ,M_n)$
+    
+    \item $P,Q ::= 0 \hspace{3mm}|\hspace{3mm} P|Q \hspace{3mm}|\hspace{3mm} !P \hspace{3mm}|\hspace{3mm} (\nu a)P \hspace{3mm}|\hspace{3mm} \overline{M} \langle N \rangle .P \hspace{3mm}|\hspace{3mm} M(x).P \hspace{3mm}|\hspace{3mm}\\let\hspace{2mm}x = g(M_1, \dots,M_n)\hspace{2mm} in\hspace{2mm}P\hspace{2mm} else\hspace{2mm} Q \hspace{3mm}| \\ let \hspace{2mm}x=M\hspace{2mm}in\hspace{2mm}P\hspace{3mm}|\hspace{3mm}if\hspace{2mm}M=N\hspace{2mm}then\hspace{2mm}P\hspace{2mm}else\hspace{2mm}Q$
+\end{itemize}
+Si assumono un infinito numero di nomi e variabili e un insieme di simboli per i costruttori e i distruttori. Per convenzione vengono usate le lettere $a, b, c, k$ per i nomi, $x, y, z$ per le variabili, $f$ per il costruttore e $g$ per il distruttore. Si definiscono termini le variabili, i nomi e le applicazioni di costruttore. Un distruttore è una funzione parziale che un processo può utilizzare per manipolare termini. Il formalismo include i costrutti standard del $\pi$-calcolo.\\
+L'uso dei costruttori e dei distruttori permette di rappresentare strutture dati e operazioni crittografiche. Vengono definiti inoltre le funzioni $fn(P)$ e $fv(P)$ che restituiscono rispettivamente i nomi e le variabili libere nel processo P. Un processo si dice chiuso se non ha variabili libere. La semantica del formalismo è definita dalla relazione di riduzione $ \xrightarrow{} $ e dalla relazione di equivalenza strutturale $ \equiv$.
 \section*{Segretezza forte}
 % Definizioni
-\section*{Algoritmo di prova}
+Per formalizzare il concetto di segretezza forte si passa dalla seguente definizione di equivalenza osservazionale:\\
+\textbf{Definizione:}  Un contesto di valutazione $C$ é un contesto costruito a partire da $[], C | P, P|C \hspace{2mm}e\hspace{2mm} (\nu a)C.$\\
+$P$ emette su $m$, $P \Downarrow m$, se e solo se $P (\leftarrow \cup \equiv)* C[\overline{m}\langle N \rangle.R]$ dove $C$ é un contesto di valutazione che non lega $m$.\\
+Si definisce equivalenza osservazionale $\approx$ la piú grande relazione simmetrica $R$ tra processi chiusi tale che $PRQ$ implica:\\
+\begin{enumerate}
+    \item se $P \Downarrow m$ allora $Q \Downarrow m$
+    \item se $P \leftarrow P'$ allora esiste $Q$ tale che $Q \leftarrow^* Q'$ e $P'RQ'$
+    \item $C[P]RC[Q]$ per tutti i contesti di valutazione chiusi $C$.
+\end{enumerate}
+Un processo $P$ emette su $m$ quando, dopo un qualsiasi numero di passi di riduzione, questi manda un messaggio su $m$ e l'avversario ottiene $m$. In questo modo l'output del canale $m$ é osservabile dall'avversario.
+\section*{Verifica del protocollo}
 \section*{Esempi}
 % Mostra gli esempi dell'articolo attraverso proverif
 \end{document}
