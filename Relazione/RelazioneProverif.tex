@@ -52,9 +52,28 @@ Intuitivamente se il processo ha una falla allora esiste un contesto $C$ che pu�
 \end{enumerate}
 Allora $P_0$ preserva la proprietà di segretezza forte.\\
 
-Il processo $Q$ rappresenta un qualsiasi avversario. Il secondo punto della proposizione indica che l'applicazione di un distruttore $g(M_0,\dots,M_n)$ ha successo per il valore dei messaggi dati da $\theta$ allora deve avere successo per qualsiasi valore del messaggio. 
+Il processo $Q$ rappresenta un qualsiasi avversario. Il secondo punto della proposizione indica che l'applicazione di un distruttore $g(M_0,\dots,M_n)$ ha successo per il valore dei messaggi dati da $\theta$ allora deve avere successo per qualsiasi valore del messaggio.\\ 
 
-\section*{Verifica del protocollo}
+\textbf{Dimostrazione:} Per procedere devono prima essere riformulate le proposizioni precedenti usando il concetto di contesto per rappresentare l'avversario. Sia $C$ un contesto di valutazione. Sia $Secr'$ un insieme di nomi non libero o legati in $C$ e non liberi in $P_0$, contenenti tanti elementi quanti $fv(P_0)$. Sia $\sigma'_0$ una sostituzione che mappa le variabili libere di $P_0$ in $Secr'$.
+\begin{enumerate}
+    \item se $C[\sigma'_0 P_0] (\rightarrow \cup \equiv)^* C'[\overline{M} \langle N \rangle . R]$ o $C[\sigma'_0 P_0] (\rightarrow \cup \equiv)^* C'[M(x).R]]$ e $C'$ è un contesto di valutazione che non lega nomi in $Secr'$ allora $M \notin Secr'$.
+    \item se $C[\sigma'_0 P_0] (\rightarrow \cup \equiv)^* C'[let\ y\ =\ g(M_0,\dots,M_n)\ in\ Q'\ else\ R']$, $\theta$ è una sostituzione chiusa con $dom(\theta)\ =\ Secr'$, $C'$ è un contesto di valutazione che non lega nomi di $Secr'$ o nelle immagini di $\theta$, $g(N_0,\dots,N_n) \rightarrow N$ è contenuta in $def(g)$, e $\theta (M_0,\dots,M_n)$ è un'istanza di $(N_0,\dots,N_n)$, allora anche $(M_0,\dots,M_n)$ è un'istanza di $(N_0,\dots,N_n)$ 
+\end{enumerate}
+Si definisce ora la relazione $R$ come $PRP'$ se e solo se esiste:\\
+\begin{enumerate}
+    \item un contesto di valutazione $C$
+    \item un insieme $Secr'$ di nomi non liberi o legati in $C$ e non legati in $P_0$, contenenti tanti elementi quanti sono in $fv(P_0)$
+    \item una sostituzione $\sigma'_0$ che mappa le variabili libere di $P_0$ ad elementi distinti di $Secr'$
+    \item sostituzioni $\theta$ e $\theta'$ con dominio $Secr'$
+    \item un processo chiuso $P''$ tale che $P\ =\ \theta P''$, $P'\ =\ \theta'P''$ e\\ $C[\sigma'_0 P_0]\ (\rightarrow \cup \equiv)^*\ P''$  
+\end{enumerate}
+La relazione $R$ è simmetrica. Si dimostra adesso che $R$ soddisfa i tre punti della definizione di equivalenza osservazionale.\\
+\begin{itemize}
+    \item La prova del punto 1 avviene usando l'ipotesi 1 mostrando che il canale non viene modificato da $\theta$ e $\theta'$
+    \item La prova del punto 2 viene fatta per casi sulle riduzioni. Nel caso di una comunicazione viene usata l'ipotesi 1 per mostrare che il canale non viene modificato da $\theta$ e $\theta'$, in questo modo $ P\ =\ \theta P'',\ P'\ =\ \theta'P'' $ e $P''$ possono comunicare.Il caso dell'applicazione del distruttore usa l'ipotesi 2: se l'applicazione del distruttore ha successo in $P\ =\ \theta P''$ allora ha successo anche per $P''$ e $P'\ =\ \theta'P''$; se il distruttore fallisce in $P$ allora fallisce sia in $P''$ e $P'$ dato che se avesse avuto successo in $P'\ =\ \theta'P''$ per l'ipotesi 2 avrebbe implicato il successo anche in $P''$ e $P\ =\ \theta P''$
+    \item La prova del punto 3 si basa sulla definizione di $R$. Il punto delicato della dimostrazione risiede nel rinominare i nomi in $Secr'$ per impedire la loro cattura dal contesto aggiunto
+\end{itemize}
+Allora $R \subset \approx$. In più per ogni sostituzione $\sigma$ e $\sigma'$ di dominio $fv(P_0)$ vale $\sigma P_0 R \sigma'P_0$, prendendo $C=[],\ Secr'\ =\ Secr,\ \sigma'\ =\ \sigma, \theta \ e\ \theta'$ tali che $\theta \sigma_0 \ =\ \sigma,\ e\ \theta'\sigma_0\ =\ \sigma', P'\ =\ \sigma_0 P_0$. In questo modo $P_0$ preserva la proprietà di segretezza forte delle sue variabili libere.
 \section*{Esempi}
 % Mostra gli esempi dell'articolo attraverso proverif
 \end{document}
