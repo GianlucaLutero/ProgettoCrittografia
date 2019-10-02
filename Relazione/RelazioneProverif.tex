@@ -9,7 +9,7 @@
 \begin{document}
 \maketitle
 \newpage
-\tableofcontents
+%\tableofcontents
 
 \newpage
 \addcontentsline{toc}{section}{Introduzione}
@@ -28,15 +28,32 @@ L'uso dei costruttori e dei distruttori permette di rappresentare strutture dati
 \section*{Segretezza forte}
 % Definizioni
 Per formalizzare il concetto di segretezza forte si passa dalla seguente definizione di equivalenza osservazionale:\\
+
 \textbf{Definizione:}  Un contesto di valutazione $C$ é un contesto costruito a partire da $[], C | P, P|C \hspace{2mm}e\hspace{2mm} (\nu a)C.$\\
 $P$ emette su $m$, $P \Downarrow m$, se e solo se $P (\leftarrow \cup \equiv)* C[\overline{m}\langle N \rangle.R]$ dove $C$ é un contesto di valutazione che non lega $m$.\\
+
 Si definisce equivalenza osservazionale $\approx$ la piú grande relazione simmetrica $R$ tra processi chiusi tale che $PRQ$ implica:\\
 \begin{enumerate}
     \item se $P \Downarrow m$ allora $Q \Downarrow m$
     \item se $P \leftarrow P'$ allora esiste $Q$ tale che $Q \leftarrow^* Q'$ e $P'RQ'$
     \item $C[P]RC[Q]$ per tutti i contesti di valutazione chiusi $C$.
 \end{enumerate}
-Un processo $P$ emette su $m$ quando, dopo un qualsiasi numero di passi di riduzione, questi manda un messaggio su $m$ e l'avversario ottiene $m$. In questo modo l'output del canale $m$ é osservabile dall'avversario.
+Un processo $P$ emette su $m$ quando, dopo un qualsiasi numero di passi di riduzione, questi manda un messaggio su $m$ e l'avversario ottiene $m$. In questo modo l'output del canale $m$ é osservabile dall'avversario. Questo fatto é sfruttato nel punto 1 della definizione: per $P$ e $Q$ equivalenti osservazionalmente, se $P$ emette su $m$ allora anche $Q$ emette su $m$, se così non fosse l'avversario sarebbe in grado di distinguerli. Nel punto 2 viene mostrato che la proprietà é preservata dalla riduzione. Questo punto fa sì che la struttura della riduzione sia visibile all'avversario: quando $P$ e $Q$ sono osservazionalmente equivalenti, se $P$ si riduce in modo non deterministico in due processi non equivalenti $P'$ e $P''$, allora anche $Q$ si riduce in due processi $Q'$ e $Q''$ osservazionalmente equivalenti rispettivamente a $P'$ e $P''$. Il punto 3 prende in considerazione l'avversario, rappresentato da un qualsiasi contesto chiuso di valutazione, ossia un contesto di valutazione tale che $C[P]$ e $C[Q]$ sono chiusi. A questo punto può essere data la definizione di segretezza forte attraverso il concetto per cui l'avversario non può distinguere due processi che differiscono per il valore dei messaggi cifrati.\\
+
+\textbf{Definizione:} Il processo $P_0$ preserva la segretezza forte delle sue variabili libere se e solo se per ogni sostituzione chiusa $\sigma$ e $\sigma'$ di dominio $fv(P_0)$ , $\sigma P_0 \approx \sigma' P_0$.\\
+
+Intuitivamente se il processo ha una falla allora esiste un contesto $C$ che può sfruttarla per eseguire differenti output a seconda del valore del messaggio scambiato, per cui $C[\sigma P_0]$ e $C[\sigma' P_0]$ non soddisfano il punto 1 della definizione di equivalenza osservazionale. Viene dato adesso un criterio più forte per dimostrare la segretezza forte. Intuitivamente viene richiesto che per ogni passo di riduzione questa proceda in modo uniforme per tutti i valori dei termini. Per un passo di comunicazione questo significa che il canale deve essere pubblico. Per un distruttore questo significa che il successo o il fallimento del processo indipendentemente dal valori dei messaggi.\\
+
+\textbf{Proposizione 1:} Sia $Secr$ l'insieme dei nomi che contiene tanti elementi quanti sono $fv(P_0)$  e tale che $fn(P_0) \cap Secr = \emptyset$. Sia $\sigma$ una sostituzione che mappa tutte le variabili libere di $P_0$ ad elementi distinti di $Secr$. Si assume allora che per tutti $Q$ tale che $fn(Q) \cap Secr = \emptyset$:
+\begin{enumerate}
+    \item se $\sigma P_0 | Q (\rightarrow \cup \equiv)^* C[\overline{M} \langle N \rangle . R]$ o $\sigma P_0 | Q (\rightarrow \cup \equiv)^* C[M(x).R]$ e $C$ è un contesto di valutazione tale che non leghi i nomi in $Secr$ allora $M \notin Secr$.
+    
+    \item se $\sigma P_0 | Q (\rightarrow \cup \equiv)^* C[let\ y\ =\ g(M_0,\dots,M_n)\ in\ Q'\ else\ R']$, $\theta$ è una sostituzione chiusa con $dom(\theta)\ =\ Secr$, $C$ è un contesto di valutazione che non lega nomi di $Secr$ o nelle immagini di $\theta$, $g(N_0,\dots,N_n) \rightarrow N$ è contenuta in $def(g)$, e $\theta (M_0,\dots,M_n)$ è un'istanza di $(N_0,\dots,N_n)$, allora anche $(M_0,\dots,M_n)$ è un'istanza di $(N_0,\dots,N_n)$   
+\end{enumerate}
+Allora $P_0$ preserva la proprietà di segretezza forte.\\
+
+Il processo $Q$ rappresenta un qualsiasi avversario. Il secondo punto della proposizione indica che l'applicazione di un distruttore $g(M_0,\dots,M_n)$ ha successo per il valore dei messaggi dati da $\theta$ allora deve avere successo per qualsiasi valore del messaggio. 
+
 \section*{Verifica del protocollo}
 \section*{Esempi}
 % Mostra gli esempi dell'articolo attraverso proverif
