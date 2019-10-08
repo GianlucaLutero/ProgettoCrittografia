@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
 \usepackage{amsmath}
-
+\usepackage{graphicx}
 \title{Tecniche automatiche per dimostrare la segretezza forte nei protocolli crittografici}
 \author{Gianluca Lutero}
 
@@ -17,12 +17,10 @@
 \section*{Calcolo dei processi}
 % Descrivere brevemente sintassi e semantica del calcolo dei processi
 Per rappresentare i protocolli viene utilizzato il formalismo del calcolo dei processi con l'aggiunta delle primitive crittografiche probabilistiche. Di seguito viene mostrata la sintassi:\\
-\\
-\begin{itemize}
-    \item $M, N ::= Var \hspace{3mm}|\hspace{3mm} Name \hspace{3mm}|\hspace{3mm} f(M_1, \dots ,M_n)$
-    
-    \item $P,Q ::= 0 \hspace{3mm}|\hspace{3mm} P|Q \hspace{3mm}|\hspace{3mm} !P \hspace{3mm}|\hspace{3mm} (\nu a)P \hspace{3mm}|\hspace{3mm} \overline{M} \langle N \rangle .P \hspace{3mm}|\hspace{3mm} M(x).P \hspace{3mm}|\hspace{3mm}\\let\hspace{2mm}x = g(M_1, \dots,M_n)\hspace{2mm} in\hspace{2mm}P\hspace{2mm} else\hspace{2mm} Q \hspace{3mm}| \\ let \hspace{2mm}x=M\hspace{2mm}in\hspace{2mm}P\hspace{3mm}|\hspace{3mm}if\hspace{2mm}M=N\hspace{2mm}then\hspace{2mm}P\hspace{2mm}else\hspace{2mm}Q$
-\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{Relazione/Immagini/calcolo.PNG}
+\end{figure}\\
 Si assumono un infinito numero di nomi e variabili e un insieme di simboli per i costruttori e i distruttori. Per convenzione vengono usate le lettere $a, b, c, k$ per i nomi, $x, y, z$ per le variabili, $f$ per il costruttore e $g$ per il distruttore. Si definiscono termini le variabili, i nomi e le applicazioni di costruttore. Un distruttore è una funzione parziale che un processo può utilizzare per manipolare termini. Il formalismo include i costrutti standard del $\pi$-calcolo.\\
 L'uso dei costruttori e dei distruttori permette di rappresentare strutture dati e operazioni crittografiche. Vengono definiti inoltre le funzioni $fn(P)$ e $fv(P)$ che restituiscono rispettivamente i nomi e le variabili libere nel processo P. Un processo si dice chiuso se non ha variabili libere. La semantica del formalismo è definita dalla relazione di riduzione $ \xrightarrow{} $ e dalla relazione di equivalenza strutturale $ \equiv$.
 \section*{Segretezza forte}
@@ -76,11 +74,19 @@ La relazione $R$ è simmetrica. Si dimostra adesso che $R$ soddisfa i tre punti 
 Allora $R \subset \ \approx$. In più per ogni sostituzione $\sigma$ e $\sigma'$ di dominio $fv(P_0)$ vale $\sigma P_0 R \sigma'P_0$, prendendo $C=[],\ Secr'\ =\ Secr,\ \sigma'\ =\ \sigma, \theta \ e\ \theta'$ tali che $\theta \sigma_0 \ =\ \sigma,\ e\ \theta'\sigma_0\ =\ \sigma', P'\ =\ \sigma_0 P_0$. In questo modo $P_0$ preserva la proprietà di segretezza forte delle sue variabili libere.
 
 \section*{Primitive per la verifica del protocollo}
-Adesso verrà esteso il formalismo del calcolo dei processi con le primitive per la verifica della proprietà di segretezza forte. Il sistema di verifica costruisce un insieme di clausole di Horn a partire da un processo chiuso $P_0$. Si assume che ogni restrizione $(\nu a)P$ in $P_0$ contiene un nome differente per $a$ e che quel nome sia differente per ogni nome libero in $P_0$. Si associa ad ogni replicazione in $P_0$ un identificare di sessione. Gli identificatori di sessione sono variabili che prendono valore da un insieme numerabile di termini e un valore diverso per ogni copia del processo replicato. Questo permette di distinguere le diverso copie del processo, in particolare vengono usati per distinguere i nomi generati dalle stesse restrizioni nelle differenti copie del processo. I termini delle regole sono chiamati pattern $p$ e sono generati dalla seguente grammatica:
-\begin{itemize}
-    \item 
-\end{itemize}
-
+Adesso verrà esteso il formalismo del calcolo dei processi con le primitive per la verifica della proprietà di segretezza forte. Il sistema di verifica costruisce un insieme di clausole di Horn a partire da un processo chiuso $P_0$. Si assume che ogni restrizione $(\nu a)P$ in $P_0$ contiene un nome differente per $a$ e che quel nome sia differente per ogni nome libero in $P_0$. Si associa ad ogni replicazione in $P_0$ un identificare di sessione. Gli identificatori di sessione sono variabili che prendono valore da un insieme numerabile di termini e un valore diverso per ogni copia del processo replicato. Questo permette di distinguere le diverso copie del processo, in particolare vengono usati per distinguere i nomi generati dalle stesse restrizioni nelle differenti copie del processo. I termini delle regole sono chiamati pattern $p$ e sono generati dalla seguente grammatica:\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{Relazione/Immagini/rule.PNG}
+\end{figure}\\
+L'insieme $EVar$ contiene le costanti usate nel predicato $testunif$. Una restrizione in un processo crea sempre un nuovo nome ogni volta che questi viene eseguito. Quando una restrizione si trova all'interno di una replicazione, questo porta a generare un illimitato numero di nomi, il che porta alla non terminazione della procedura se questi vengo rappresentati in modo diretto. Per evitare questo i nomi vengono rappresentati come funzioni. Le regole si basano sui seguenti fatti:\\   
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{Relazione/Immagini/fatti.PNG}
+\end{figure}\\
+Il fatto $att(p)$ significa che l'avversario può conoscere il valore di $p$. Il fatto $mess(p,p')$ sta a significare che il messaggio $p'$ può comparire sul canale $p$. Il fatto $com(p)$ sta a significare che l'avversario può comunicare sul canale $p$, il che permette ad esso di verificare che $p$ sia un nome oppure no. Il fatto $testunif(p,p')$ è definito come segue. Si dice che un insieme di pattern contengono nomi legati quando contengono sottotermini della forma $a[\dots]$ dove $a$ corrisponde ad una restrizione nel processo. Nella seguente definizione si utilizzano $Secr$ e $\sigma_0$ come nella Proposizione 1.\\
+\\
+\textbf{Definizione 3:} Siano $p,p'$ pattern chiusi. Si dice che $testunif(p,p')$ è vero se e solo se esiste una sostituzione chiusa $\sigma$ di dominio $Secr\ \cup \ EVar $ tale che $\sigma Secr$ non contiene nomi legati e $\sigma p = \sigma p'$, e non esiste una sostituzione $\sigma'$ di dominio $EVar$ tale che $\sigma' p = \sigma' p'$.
 \section*{Esempi}
 % Mostra gli esempi dell'articolo attraverso proverif
 \end{document}
