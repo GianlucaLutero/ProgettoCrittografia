@@ -19,7 +19,7 @@
 Per rappresentare i protocolli viene utilizzato il formalismo del calcolo dei processi con l'aggiunta delle primitive crittografiche probabilistiche. Di seguito viene mostrata la sintassi:\\
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.5]{Relazione/Immagini/calcolo.PNG}
+    \includegraphics[scale=0.6]{Relazione/Immagini/calcolo.PNG}
 \end{figure}\\
 Si assumono un infinito numero di nomi e variabili e un insieme di simboli per i costruttori e i distruttori. Per convenzione vengono usate le lettere $a, b, c, k$ per i nomi, $x, y, z$ per le variabili, $f$ per il costruttore e $g$ per il distruttore. Si definiscono termini le variabili, i nomi e le applicazioni di costruttore. Un distruttore è una funzione parziale che un processo può utilizzare per manipolare termini. Il formalismo include i costrutti standard del $\pi$-calcolo.\\
 L'uso dei costruttori e dei distruttori permette di rappresentare strutture dati e operazioni crittografiche. Vengono definiti inoltre le funzioni $fn(P)$ e $fv(P)$ che restituiscono rispettivamente i nomi e le variabili libere nel processo P. Un processo si dice chiuso se non ha variabili libere. La semantica del formalismo è definita dalla relazione di riduzione $ \xrightarrow{} $ e dalla relazione di equivalenza strutturale $ \equiv$.
@@ -84,9 +84,18 @@ L'insieme $EVar$ contiene le costanti usate nel predicato $testunif$. Una restri
     \centering
     \includegraphics[scale=0.7]{Relazione/Immagini/fatti.PNG}
 \end{figure}\\
-Il fatto $att(p)$ significa che l'avversario può conoscere il valore di $p$. Il fatto $mess(p,p')$ sta a significare che il messaggio $p'$ può comparire sul canale $p$. Il fatto $com(p)$ sta a significare che l'avversario può comunicare sul canale $p$, il che permette ad esso di verificare che $p$ sia un nome oppure no. Il fatto $testunif(p,p')$ è definito come segue. Si dice che un insieme di pattern contengono nomi legati quando contengono sottotermini della forma $a[\dots]$ dove $a$ corrisponde ad una restrizione nel processo. Nella seguente definizione si utilizzano $Secr$ e $\sigma_0$ come nella Proposizione 1.\\
+Il fatto $att(p)$ significa che l'avversario può conoscere il valore di $p$. Il fatto $mess(p,p')$ sta a significare che il messaggio $p'$ può comparire sul canale $p$. Il fatto $com(p)$ sta a significare che l'avversario può comunicare sul canale $p$, il che permette ad esso di verificare che $p$ sia un nome oppure no. Il predicato $bad$ serve per rilevare il caso in cui viene violata la proprietà di segretezza forte. Il fatto $testunif(p,p')$ è definito come segue. Si dice che un insieme di pattern contengono nomi legati quando contengono sottotermini della forma $a[\dots]$ dove $a$ corrisponde ad una restrizione nel processo. Nella seguente definizione si utilizzano $Secr$ e $\sigma_0$ come nella Proposizione 1.\\
 \\
-\textbf{Definizione 3:} Siano $p,p'$ pattern chiusi. Si dice che $testunif(p,p')$ è vero se e solo se esiste una sostituzione chiusa $\sigma$ di dominio $Secr\ \cup \ EVar $ tale che $\sigma Secr$ non contiene nomi legati e $\sigma p = \sigma p'$, e non esiste una sostituzione $\sigma'$ di dominio $EVar$ tale che $\sigma' p = \sigma' p'$.
+\textbf{Definizione 3:} Siano $p,p'$ pattern chiusi. Si dice che $testunif(p,p')$ è vero se e solo se esiste una sostituzione chiusa $\sigma$ di dominio $Secr\ \cup \ EVar $ tale che $\sigma Secr$ non contiene nomi legati e $\sigma p = \sigma p'$, e non esiste una sostituzione $\sigma'$ di dominio $EVar$ tale che $\sigma' p = \sigma' p'$.\\
+\\
+Quello che si intende nella definizione è che il predicato $testunif(p,p')$ restituisce vero quando l'esito del processo di unificazione di $p$ e $p'$ dipende dal valore del messaggio.\\
+Adesso verranno descritte le regole che rappresentano le abilità dell'avversario e le azioni degli altri partecipanti.\\
+\\
+\textbf{Regole per l'avversario } Di seguito verranno riportate le regole che rappresentano le peggiori azioni che un qualsiasi processo $Q$ che rappresenta l'avversario possa fare.\\
+\textbf{METTERE IMMAGINE CON LE REGOLE DELL'ATTACCANTE}\\
+La regola $(Rc)$ sta a significare che se l'avversario ha $x'$ allora può iniziare una comunicazione su di esso. La regola $(Rcom)$ controlla che $com(x)$ non sia derivabile da $x \in Secr$, in questo modo non avviene alcuna comunicazione viene fatta sui canali di  $Secr$. Quando tutte le comunicazioni avvengono su un canale pubblico costante questo equivale a mostrare che $att(x)$ non è derivabile. Questo è il criterio per dimostrare la proprietà di segretezza standard di $x$. La regola $(Rt)$ sta ad indicare che se l'avversario ha $x_0,\dots,x_n$ allora può verificare se il distruttore ha avuto successo oppure no. Quindi se $testunif((x_0,\dots,x_n),EVar((M_0,\dots,M_n)))$ è vero indica che se per qualche valore del segreto $(x_0,\dots,x_n)$ è un'istanza di $(M_0,\dots,M_n)$ ma non per altri, allora potrebbe esserci un attacco per violare la segretezza forte. La regola $(Rn)$ decscrive il fatto che un avversario può generare un numero illimitato di nuovi nomi $b[i]$. La regola $(Init)$ indica che l'avversario inizialmente conosce tutti i nomi liberi di $P_0$. Le regole $(Rf)$ e $(Rg)$ stanno ad indicare che l'avversario può applicare tutte le operazione ai termini che conosce. La regola $(Rl)$ indica che l'avversario può ascoltare da ogni canale che conosce mentre con la regola $(Rs)$ può mandare messaggi a tutti i canali che conosce.\\
+\\
+\textbf{Regole per il protocollo } La traduzione di $ $
 \section*{Esempi}
 % Mostra gli esempi dell'articolo attraverso proverif
 \end{document}
