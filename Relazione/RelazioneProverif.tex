@@ -2,6 +2,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
 \usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
 \usepackage{graphicx}
 \title{Tecniche automatiche per dimostrare la segretezza forte nei protocolli crittografici}
 \author{Gianluca Lutero}
@@ -92,10 +94,51 @@ Quello che si intende nella definizione è che il predicato $testunif(p,p')$ res
 Adesso verranno descritte le regole che rappresentano le abilità dell'avversario e le azioni degli altri partecipanti.\\
 \\
 \textbf{Regole per l'avversario } Di seguito verranno riportate le regole che rappresentano le peggiori azioni che un qualsiasi processo $Q$ che rappresenta l'avversario possa fare.\\
-\textbf{METTERE IMMAGINE CON LE REGOLE DELL'ATTACCANTE}\\
-La regola $(Rc)$ sta a significare che se l'avversario ha $x'$ allora può iniziare una comunicazione su di esso. La regola $(Rcom)$ controlla che $com(x)$ non sia derivabile da $x \in Secr$, in questo modo non avviene alcuna comunicazione viene fatta sui canali di  $Secr$. Quando tutte le comunicazioni avvengono su un canale pubblico costante questo equivale a mostrare che $att(x)$ non è derivabile. Questo è il criterio per dimostrare la proprietà di segretezza standard di $x$. La regola $(Rt)$ sta ad indicare che se l'avversario ha $x_0,\dots,x_n$ allora può verificare se il distruttore ha avuto successo oppure no. Quindi se $testunif((x_0,\dots,x_n),EVar((M_0,\dots,M_n)))$ è vero indica che se per qualche valore del segreto $(x_0,\dots,x_n)$ è un'istanza di $(M_0,\dots,M_n)$ ma non per altri, allora potrebbe esserci un attacco per violare la segretezza forte. La regola $(Rn)$ decscrive il fatto che un avversario può generare un numero illimitato di nuovi nomi $b[i]$. La regola $(Init)$ indica che l'avversario inizialmente conosce tutti i nomi liberi di $P_0$. Le regole $(Rf)$ e $(Rg)$ stanno ad indicare che l'avversario può applicare tutte le operazione ai termini che conosce. La regola $(Rl)$ indica che l'avversario può ascoltare da ogni canale che conosce mentre con la regola $(Rs)$ può mandare messaggi a tutti i canali che conosce.\\
-\\
-\textbf{Regole per il protocollo } La traduzione di $ $
-\section*{Esempi}
-% Mostra gli esempi dell'articolo attraverso proverif
-\end{document}
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{Relazione/Immagini/term_rule.PNG}
+\end{figure}
+La regola $(Rc)$ sta a significare che se l'avversario ha $x'$ allora può iniziare una comunicazione su di esso. La regola $(Rcom)$ controlla che $com(x)$ non sia derivabile da $x \in Secr$, in questo modo non avviene alcuna comunicazione viene fatta sui canali di  $Secr$. Quando tutte le comunicazioni avvengono su un canale pubblico costante questo equivale a mostrare che $att(x)$ non è derivabile. Questo è il criterio per dimostrare la proprietà di segretezza standard di $x$. La regola $(Rt)$ sta ad indicare che se l'avversario ha $x_0,\dots,x_n$ allora può verificare se il distruttore ha avuto successo oppure no. Quindi se $testunif((x_0,\dots,x_n),EVar((M_0,\dots,M_n)))$ è vero indica che se per qualche valore del segreto $(x_0,\dots,x_n)$ è un'istanza di $(M_0,\dots,M_n)$ ma non per altri, allora potrebbe esserci un attacco per violare la segretezza forte. La regola $(Rn)$ descrive il fatto che un avversario può generare un numero illimitato di nuovi nomi $b[i]$. La regola $(Init)$ indica che l'avversario inizialmente conosce tutti i nomi liberi di $P_0$. Le regole $(Rf)$ e $(Rg)$ stanno ad indicare che l'avversario può applicare tutte le operazione ai termini che conosce. La regola $(Rl)$ indica che l'avversario può ascoltare da ogni canale che conosce mentre con la regola $(Rs)$ può mandare messaggi a tutti i canali che conosce.\\
+\textbf{Regole per il protocollo } La traduzione di $\llbracket P \rrbracket \rho sh$ di un processo $P$ è un insieme di regole dove $\rho$ è una funzione che associa un pattern ad ogni nome e variabile, $s$ è una sequenza di pattern e $h$ una sequenza di fatti. La sequenza vuota è indicata con $\emptyset$, la concatenazione di pattern come $s,p$ e la concatenazione di fatti come $h \land F$.\\
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{Relazione/Immagini/semantic.PNG}
+\end{figure}\\
+L'ambiente $\rho$ mappa nomi e variabili al loro corrispondente pattern. La sequenza $s$ contiene tutti i messaggi di input, gli identificatori di sessione e i risultati dei distruttori fino a quel punto del programma. La sequenza $h$ contiene tutti i fatti che devono essere veri fino al punto corrente del programma. 
+\section*{Algoritmo di risoluzione}
+L'algoritmo inferisce nuove proposizioni per risoluzione come segue. A partire da due proposizioni $R\ =\ H \Rightarrow C$ e $R'\ =\ F \land H' \Rightarrow C'$ si ottiene che $R \circ_F R'\ =\ \sigma H \land \sigma H' \Rightarrow \sigma C'$ dove $C$ e $F$ sono unificabili e $\sigma$ è il più generico unificatore per $C$ e $F$:\\
+\begin{center}
+    \Large
+    $\frac{H\Rightarrow C \hspace{2cm} F \land H' \Rightarrow C'}{\sigma H \land \sigma H' \Rightarrow \sigma C'}$
+\end{center}
+La proposizione $R \circ_F R'$ è la combinazione di $R$ e $R'$, in cui $R$ prova le ipotesi $F$ di $R'$. La risoluzione è guidata dalla funzione di selezione $sel$: $sel(R)$ ritorna un sottoinsieme delle ipotesi di $R$ e il passo di risoluzione successiva viene effettuata solo quando $sel(R)\ =\ \emptyset$ e $F \in sel(R')$. In questo studio viene usata la seguente funzione di selezione:\\
+\begin{itemize}
+    \item Quando la proposizione è $R$:\\
+    $testunif((x_1),(x_2))\ \land \att(x_1)\ \land \ att(x_2)\ \Rightarrow \ bad $
+    \item Per tutte le altre proposizioni $sel(R)$ è definita come:\\
+    $
+    sel(H\ \Rightarrow \ C)\ =\  
+    \begin{cases} 
+    \emptyset & \text{se tutti gli elementi di H sono nella forma } \\
+    &  att(x) \text{, con x variabile, o testunif(p,p')} \\
+    {F} & \text{dove } F\ \neq \ att(x), F\ \neq \ testunif(p,p'),\\
+    & \text{con } F \in H, \text{ altrimenti}
+    \end{cases}
+   $
+ \end{itemize}
+ 
+ Nell'ultimo caso possono esserci più scelte per $F$, per semplicità se ne sceglie una casualmente. La funzione di selezione non deve mai scegliere il fatto $testunif$ perchè non è definito da proposizioni. Non dovrebbe essere scelto neanche $att(x)$ perchè questo porterebbe a non terminazione. Però se $att(x)$ non venisse selezionata nel primo caso della funzione di selezione questa rimarrebbe invariata dopo l'applicazione dell'algoritmo portando a non sapere se il fatto $bad$ possa essere derivabile oppure no da questa regola. L'algoritmo usa ottimizzazioni standard, come l'eliminazione delle tautologie eseguita dalla regola $eliminataut$, e anche specifiche per i protocolli, come l'eliminazione dell'ipotesi $att(x)$: $elimattx$ rimuove l'ipotesi $att(x)$ quando $x$ non appare da altre parti nella proposizione, questo può essere fatto in quanto l'ipotesi risulta essere sempre vera finché l'attaccante risulta avere almeno un termine. Per determinare se $testunif(p_1,p_2)$ è vero oppure no bisogna estendere l'algoritmo. Questo si ottiene attraverso una tecnica specifica di semplificazione. Le semplificazioni hanno diversi obiettivi: ridurre le dimensioni dei fatti $testunif$, in modo tale che questi non crescano in modo indefinito; progredire verso la conoscenza del valore di verità di questi fatti instanziando le variabili; semplificarli quando il loro valore di verità è noto. Le semplificazioni che possono essere raggruppate in una funzione $simplify$ definita come segue :\\
+ \begin{center}
+     $simplify\ =\ elimaut\ \circ \ elimattx\ \circ \ simptestuniftrue\ \circ \ simptestuniffalse\ \circ \ repeat(elimvar\ \circ \ instantiate\ \circ \ elimEVar\ \circ \ swap\ \circ \ unify) $
+ \end{center}
+ 
+ L'espressione $repeat(f)$ sta a significare che la funzione $f$ viene ripetuta finchè non viene raggiunto un punto fisso. È sufficiente ripetere la semplificazione solo quando $elimvar$ o $instantiate$ hanno modificato l'insieme delle proposizioni. La ripetizione non porta a loop infinito perchè le dimensioni di $testunif$ decrescono ad ogni iterazione. Viene definita la funzione $condense(R)$ che applica $simplify$ ad $R$ ed elimina da essa le proposizioni sussunte. Si dice che $H_1\ \Rightarrow \ C_1$ sussume $H_2\ \Rightarrow \ C_2$ se e solo se esiste una sostituzione $\sigma$ tale che $\sigma C_1 \ =\ C_2$ e $H_1 \subseteq \ H_2$. Se \textit{R} contiene le proposizioni $R$ e $R'$, tali che $R$ sussume $R'$, allora la proposizione $R'$ viene eliminata. Si definisce ora l'algoritmo $saturate(R_0)$. Iniziando da $condense(R_0)$, l'algoritmo aggiunge le proposizioni inferite dalla risoluzione con funzione di selezione $sel$ e condensa l'insieme delle proposizioni ad ogni passo di iterazione finchè non viene raggiunto un punto fisso. Quando viene raggiunto il punto fisso, $saturate(R)$ è l'insieme delle proposizioni $R$ nell'insieme delle proposizioni ottenute tale che $sel(R)\ =\ \emptyset$. Il seguente lemma mostra come alla terminazione dell'algoritmo l'unica proposizione rimanente che contiene $bad$ è $bad$ stesso. Quindi $bad$ è derivabile da $saturate(R_{P_0})$ se e solo se la proposizione $bad$  è contenuta in $saturate(R_{P_0})$. \\
+ 
+ \textbf{Lemma}: Dopo la semplificazione, se $R\ =\ H \Rightarrow \ bad$ e $H$ è non vuoto, allora $sel(R)\ \neq \ \emptyset$.\\
+ 
+ L'algoritmo sopra descritto genera la proposizione $bad$ se e solo se $bad$ è derivabile da $R_{P_0}$. Quindi se non può essere generata la proposizione $bad$ allora $P_0$ preserva la segretezza forte delle sue variabili libere.
+ 
+ \newpage
+ \section*{Riferimenti bibliografici}
+ \end{document}
