@@ -7,18 +7,18 @@
 \usepackage{graphicx}
 \title{Verifica automatica della proprietà di\\ sicurezza forte}
 \author{Gianluca Lutero}
-
+\date{}
 \begin{document}
 \maketitle
 
 \newpage
 \section*{Introduzione}
-In questa relazione verrà descritta una tecnica per la verifica della proprietà di sicurezza forte nei protocolli crittografici. La tecnica prevede di fornire il protocollo sotto forma di processo usando un'estensione del $\pi$-calcolo con primitive crittografiche. Il processo viene quindi tradotto in un insieme di clausole di Horn le quali danno una rappresentazione astratta del protocollo. In questo modo dalla rappresentazione possono essere derivati tutti i test che l'avversario può eseguire, in particolare modo si vuole ottenere che da nessuno di questi test possano trapelare informazioni riservate. Questo si ottiene attraverso l'aggiunta di un nuovo predicato "testunif", il quale non è definito attraverso clausole di Horn ma attraverso specifici passi di semplificazione nell'algoritmo di risoluzione. Considerato questo si può mostrare come il non riuscire a derivare un determinato fatto $bad$, che nel formalismo rappresenta il successo dell'attaccante nel violare la proprietà, allora il protocollo preserva la segretezza forte.  
+In questa relazione verrà descritta una tecnica automatica per la verifica della proprietà di sicurezza forte nei protocolli crittografici. La tecnica prevede di esprimere il protocollo nel formalismo del $\pi$-calcolo esteso con primitive crittografiche. Il processo viene quindi tradotto in un insieme di clausole di Horn le quali danno una rappresentazione astratta del protocollo. Da questa rappresentazione possono essere derivati tutti i test che l'avversario può eseguire per cercare di violare il protocollo. Questo si ottiene attraverso l'aggiunta del nuovo predicato "testunif", il quale non è definito attraverso clausole di Horn ma attraverso specifici passi di semplificazione nell'algoritmo di risoluzione. Considerato questo si può mostrare come il non riuscire a derivare un determinato fatto $bad$, che nel formalismo rappresenta il successo dell'attaccante nel violare il protocollo, questi preserva la proprietà di segretezza forte. Prima di procedere con la descrizione del metodo viene formalizzata la definizione di segretezza forte come un caso particolare della relazione di equivalenza osservazionale.
 
 \newpage
 \section*{Calcolo dei processi}
 % Descrivere brevemente sintassi e semantica del calcolo dei processi
-Per rappresentare i protocolli viene utilizzato il formalismo del calcolo dei processi con l'aggiunta delle primitive crittografiche probabilistiche. Di seguito viene mostrata la sintassi:\\
+Per rappresentare i protocolli viene utilizzato il formalismo del calcolo dei processi con esteso con le primitive crittografiche probabilistiche. Di seguito viene mostrata la sintassi:\\
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.6]{Relazione/Immagini/calcolo.PNG}
