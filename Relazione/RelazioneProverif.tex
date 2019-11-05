@@ -8,27 +8,33 @@
 \title{Verifica automatica della proprietà di\\ sicurezza forte}
 \author{Gianluca Lutero}
 \date{}
+
 \begin{document}
 \maketitle
+\thispagestyle{empty}
 
 \newpage
 \section*{Introduzione}
-In questa relazione verrà descritta una tecnica automatica per la verifica della proprietà di sicurezza forte nei protocolli crittografici. La tecnica prevede di esprimere il protocollo nel formalismo del $\pi$-calcolo esteso con primitive crittografiche. Il processo viene quindi tradotto in un insieme di clausole di Horn le quali danno una rappresentazione astratta del protocollo. Da questa rappresentazione possono essere derivati tutti i test che l'avversario può eseguire per cercare di violare il protocollo. Questo si ottiene attraverso l'aggiunta del nuovo predicato "testunif", il quale non è definito attraverso clausole di Horn ma attraverso specifici passi di semplificazione nell'algoritmo di risoluzione. Considerato questo si può mostrare come il non riuscire a derivare un determinato fatto $bad$, che nel formalismo rappresenta il successo dell'attaccante nel violare il protocollo, questi preserva la proprietà di segretezza forte. Prima di procedere con la descrizione del metodo viene formalizzata la definizione di segretezza forte come un caso particolare della relazione di equivalenza osservazionale.
+In questa relazione verrà descritta una tecnica automatica per la verifica della proprietà di sicurezza forte nei protocolli crittografici. Il metodo in primo luogo formalizza la definizione di segretezza forte come un caso particolare della relazione di equivalenza osservazionale. Definita in questo modo la proprietà viene espresso il protocollo nel formalismo del $\pi$-calcolo esteso con primitive crittografiche. Il protocollo così espresso viene quindi tradotto in un insieme di clausole di Horn le quali ne danno una rappresentazione astratta. Da questa rappresentazione possono essere derivati tutti i test che l'avversario può eseguire per cercare di violare il protocollo. Lo scopo principale quindi è quello di cercare di verificare che nessuno di questi test riveli informazioni segrete senza doverli enumerare tutti, considerando che possono essere infiniti. Questo si ottiene con il nuovo predicato "testunif", il quale non è definito da clausole di Horn ma attraverso specifici passi di semplificazione nell'algoritmo di risoluzione. Considerato questo si può mostrare come il non riuscire a derivare un determinato fatto $bad$, che nel formalismo rappresenta il successo dell'attaccante nel violare il protocollo, il processo preserva la proprietà di segretezza forte.
 
 \newpage
 \section*{Calcolo dei processi}
 % Descrivere brevemente sintassi e semantica del calcolo dei processi
-Per rappresentare i protocolli viene utilizzato il formalismo del calcolo dei processi con esteso con le primitive crittografiche probabilistiche. Di seguito viene mostrata la sintassi:\\
+Per la rappresentazione dei protocolli viene utilizzato il formalismo del calcolo dei processi esteso con le primitive crittografiche probabilistiche. Di seguito viene mostrata la sintassi:\\
 \begin{figure}[h]
-    \centering
-    \includegraphics[scale=0.6]{Relazione/Immagini/calcolo.PNG}
+        \centering
+        \includegraphics[scale=0.6]{Relazione/Immagini/calcolo.PNG} 
 \end{figure}\\
 Si assumono un infinito numero di nomi e variabili e un insieme di simboli per i costruttori e i distruttori. Per convenzione vengono usate le lettere $a, b, c, k$ per i nomi, $x, y, z$ per le variabili, $f$ per il costruttore e $g$ per il distruttore. Si definiscono termini le variabili, i nomi e le applicazioni di costruttore. Un distruttore è una funzione parziale che un processo può utilizzare per manipolare termini.\\
-L'uso dei costruttori e dei distruttori permette di rappresentare strutture dati e operazioni crittografiche. Vengono definiti inoltre le funzioni $fn(P)$ e $fv(P)$ che restituiscono rispettivamente i nomi e le variabili libere nel processo P. Un processo si dice chiuso se non ha variabili libere. La semantica del formalismo è definita dalla relazione di riduzione $ \xrightarrow{} $ e dalla relazione di equivalenza strutturale $ \equiv$.
+L'uso dei costruttori e dei distruttori permette di rappresentare strutture dati e operazioni crittografiche.\\
+\begin{center}
+ \includegraphics[scale=0.55]{Relazione/Immagini/crypto.PNG}
+\end{center}
+Vengono definiti inoltre le funzioni $fn(P)$ e $fv(P)$ che restituiscono rispettivamente i nomi e le variabili libere nel processo P. Un processo si dice chiuso se non ha variabili libere. La semantica del formalismo è definita dalla relazione di riduzione $ \xrightarrow{} $ e dalla relazione di equivalenza strutturale $ \equiv$.
 
 \section*{Segretezza forte}
 % Definizioni
-La proprietà di segretezza forte esprime che un qualsiasi processo che esegue l'attacco non possa rilevare alcuna differenza al variare del valore del segreto.
+La proprietà di segretezza forte esprime che un qualsiasi processo che esegue l'attacco non possa rilevare alcuna differenza al variare del valore del segreto. Questa proprietà è più restrittiva rispetto alla tipica nozione di segretezza, che impone all'avversario l'impossibilità di ottenere il valore del segreto, rendendosi necessaria nel momento in cui il valore delle variabili riservate è limitato.
 Per formalizzare il concetto si passa dalla definizione di equivalenza osservazionale:\\
 
 \textbf{Definizione:}  Un contesto di valutazione $C$ é un contesto costruito a partire da $[\ ], C | P, P|C \hspace{2mm}e\hspace{2mm} (\nu a)C.$\\
@@ -54,7 +60,7 @@ Intuitivamente se il processo ha una falla allora esiste un contesto $C$ che pu�
 \end{enumerate}
 Allora $P_0$ preserva la proprietà di segretezza forte.\\
 
-Il processo $Q$ rappresenta un qualsiasi avversario. Il secondo punto della proposizione indica che l'applicazione di un distruttore $g(M_0,\dots,M_n)$ ha successo per il valore dei messaggi dati da $\theta$ allora deve avere successo per qualsiasi valore del messaggio.\\ 
+Il processo $Q$ rappresenta un qualsiasi avversario. Il secondo punto della proposizione indica che se l'applicazione di un distruttore $g(M_0,\dots,M_n)$ ha successo per il valore dei messaggi dati da $\theta$ allora deve avere successo per qualsiasi valore del messaggio.\\ 
 
 \textbf{Dimostrazione:} Per procedere devono prima essere riformulate le proposizioni precedenti usando il concetto di contesto per rappresentare l'avversario. Sia $C$ un contesto di valutazione. Sia $Secr'$ un insieme di nomi non libero o legati in $C$ e non liberi in $P_0$, contenenti tanti elementi quanti $fv(P_0)$. Sia $\sigma'_0$ una sostituzione che mappa le variabili libere di $P_0$ in $Secr'$.
 \begin{enumerate}
@@ -78,15 +84,15 @@ La relazione $R$ è simmetrica. Si dimostra adesso che $R$ soddisfa i tre punti 
 Allora $R \subset \ \approx$. In più per ogni sostituzione $\sigma$ e $\sigma'$ di dominio $fv(P_0)$ vale $\sigma P_0 R \sigma'P_0$, prendendo $C=[\ ],\ Secr'\ =\ Secr,\ \sigma'\ =\ \sigma, \theta \ e\ \theta'$ tali che $\theta \sigma_0 \ =\ \sigma,\ e\ \theta'\sigma_0\ =\ \sigma', P'\ =\ \sigma_0 P_0$. In questo modo $P_0$ preserva la proprietà di segretezza forte delle sue variabili libere.
 
 \section*{Primitive per la verifica del protocollo}
-Adesso verrà esteso il formalismo del calcolo dei processi con le primitive per la verifica della proprietà di segretezza forte. Il sistema di verifica costruisce un insieme di clausole di Horn a partire da un processo chiuso $P_0$. Si assume che ogni restrizione $(\nu a)P$ in $P_0$ contiene un nome differente per $a$ e che quel nome sia differente per ogni nome libero in $P_0$. Si associa ad ogni replicazione in $P_0$ un identificare di sessione. Gli identificatori di sessione sono variabili che prendono valore da un insieme numerabile di termini e un valore diverso per ogni copia del processo replicato. Questo permette di distinguere le diverso copie del processo, in particolare vengono usati per distinguere i nomi generati dalle stesse restrizioni nelle differenti copie del processo. I termini delle regole sono chiamati pattern $p$ e sono generati dalla seguente grammatica:\\
-\begin{figure}[h]
+Adesso verrà esteso il formalismo per la verifica dei protocolli con le primitive per la verifica della proprietà di segretezza forte. Il sistema di verifica costruisce un insieme di clausole di Horn a partire da un processo chiuso $P_0$. Si assume che ogni restrizione $(\nu a)P$ in $P_0$ contiene un nome differente per $a$ e che quel nome sia differente per ogni nome libero in $P_0$. Si associa ad ogni replicazione in $P_0$ un identificare di sessione. Gli identificatori di sessione sono variabili che prendono valore da un insieme numerabile di termini e un valore diverso per ogni copia del processo replicato. Questo permette di distinguere le diverso copie del processo, in particolare vengono usati per distinguere i nomi generati dalle stesse restrizioni nelle differenti copie del processo. I termini delle regole sono chiamati pattern $p$ e sono generati dalla seguente grammatica:\\
+\begin{figure}[ht]
     \centering
     \includegraphics[scale=0.7]{Relazione/Immagini/rule.PNG}
 \end{figure}\\
 L'insieme $EVar$ contiene le costanti usate nel predicato $testunif$. Una restrizione in un processo crea sempre un nuovo nome ogni volta che questi viene eseguito. Quando una restrizione si trova all'interno di una replicazione, questo porta a generare un illimitato numero di nomi, il che porta alla non terminazione della procedura se questi vengo rappresentati in modo diretto. Per evitare questo i nomi vengono rappresentati come funzioni. Le regole si basano sui seguenti fatti:\\   
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.7]{Relazione/Immagini/fatti.PNG}
+    \includegraphics[scale=0.6]{Relazione/Immagini/fatti.PNG}
 \end{figure}\\
 Il fatto $att(p)$ significa che l'avversario può conoscere il valore di $p$. Il fatto $mess(p,p')$ sta a significare che il messaggio $p'$ può comparire sul canale $p$. Il fatto $com(p)$ sta a significare che l'avversario può comunicare sul canale $p$, il che permette ad esso di verificare che $p$ sia un nome oppure no. Il predicato $bad$ serve per rilevare il caso in cui viene violata la proprietà di segretezza forte. Il fatto $testunif(p,p')$ è definito come segue. Si dice che un insieme di pattern contengono nomi legati quando contengono sottotermini della forma $a[\dots]$ dove $a$ corrisponde ad una restrizione nel processo. Nella seguente definizione si utilizzano $Secr$ e $\sigma_0$ come nella Proposizione 1.\\
 \\
@@ -97,11 +103,11 @@ Adesso verranno descritte le regole che rappresentano le abilità dell'avversari
 \\
 \textbf{Regole per l'avversario } Di seguito verranno riportate le regole che rappresentano le azioni che un qualsiasi processo $Q$, che rappresenta l'avversario, possa fare.\\
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
-    \includegraphics[scale=0.5]{Relazione/Immagini/term_rule.PNG}
+    \includegraphics[scale=0.4]{Relazione/Immagini/term_rule.PNG}
 \end{figure}
-La regola $(Rc)$ sta a significare che se l'avversario ha $x'$ allora può iniziare una comunicazione su di esso. La regola $(Rcom)$ controlla che $com(x)$ non sia derivabile da $x \in Secr$, in questo modo non avviene alcuna comunicazione viene fatta sui canali di  $Secr$. Quando tutte le comunicazioni avvengono su un canale pubblico costante questo equivale a mostrare che $att(x)$ non è derivabile. Questo è il criterio per dimostrare la proprietà di segretezza standard di $x$. La regola $(Rt)$ sta ad indicare che se l'avversario ha $x_0,\dots,x_n$ allora può verificare se il distruttore ha avuto successo oppure no. Quindi se $testunif((x_0,\dots,x_n),EVar((M_0,\dots,M_n)))$ è vero indica che se per qualche valore del segreto $(x_0,\dots,x_n)$ è un'istanza di $(M_0,\dots,M_n)$ ma non per altri, allora potrebbe esserci un attacco per violare la segretezza forte. La regola $(Rn)$ descrive il fatto che un avversario può generare un numero illimitato di nuovi nomi $b[i]$. La regola $(Init)$ indica che l'avversario inizialmente conosce tutti i nomi liberi di $P_0$. Le regole $(Rf)$ e $(Rg)$ stanno ad indicare che l'avversario può applicare tutte le operazione ai termini che conosce. La regola $(Rl)$ indica che l'avversario può ascoltare da ogni canale che conosce mentre con la regola $(Rs)$ può mandare messaggi a tutti i canali che conosce.\\
+La regola $(Rc)$ sta a significare che se l'avversario ha $x'$ allora può iniziare una comunicazione su di esso. La regola $(Rcom)$ controlla che $com(x)$ non sia derivabile da $x \in Secr$, in questo modo non avviene alcuna comunicazione sui canali di  $Secr$. Quando tutte le comunicazioni avvengono su un canale pubblico costante questo equivale a mostrare che $att(x)$ non è derivabile, questo è il criterio per dimostrare la proprietà di segretezza standard di $x$. La regola $(Rt)$ sta ad indicare che se l'avversario ha $x_0,\dots,x_n$ allora può verificare se il distruttore ha avuto successo oppure no. Quindi se $testunif((x_0,\dots,x_n),EVar((M_0,\dots,M_n)))$ è vero indica che se per qualche valore del segreto $(x_0,\dots,x_n)$ è un'istanza di $(M_0,\dots,M_n)$ ma non per altri, allora potrebbe esserci un attacco per violare la segretezza forte. La regola $(Rn)$ descrive il fatto che un avversario può generare un numero illimitato di nuovi nomi $b[i]$. La regola $(Init)$ indica che l'avversario inizialmente conosce tutti i nomi liberi di $P_0$. Le regole $(Rf)$ e $(Rg)$ stanno ad indicare che l'avversario può applicare tutte le operazione ai termini che conosce. La regola $(Rl)$ indica che l'avversario può ascoltare da ogni canale che conosce mentre con la regola $(Rs)$ può mandare messaggi a tutti i canali che conosce.\\
 
 \textbf{Regole per il protocollo } La traduzione di $\llbracket P \rrbracket \rho sh$ di un processo $P$ è un insieme di regole dove $\rho$ è una funzione che associa un pattern ad ogni nome e variabile, $s$ è una sequenza di pattern e $h$ una sequenza di fatti. La sequenza vuota è indicata con $\emptyset$, la concatenazione di pattern come $s,p$ e la concatenazione di fatti come $h \land F$.\\
 \begin{center}
@@ -116,9 +122,9 @@ L'algoritmo inferisce nuove proposizioni per risoluzione come segue. A partire d
 \end{center}
 La proposizione $R \circ_F R'$ è la combinazione di $R$ e $R'$, in cui $R$ prova le ipotesi $F$ di $R'$. La risoluzione è guidata dalla funzione di selezione $sel$: $sel(R)$ ritorna un sottoinsieme delle ipotesi di $R$ e il passo di risoluzione successiva viene effettuata solo quando $sel(R)\ =\ \emptyset$ e $F \in sel(R')$. In questo caso viene usata la seguente funzione di selezione:\\
 \begin{itemize}
-    \item quando la proposizione è $R$:\\
+    \item quando la proposizione è \\$R = testunif((x_1),(x_2))\ \land \ att(x_1)\ \land \ att(x_2)\ \Rightarrow \ bad$:\\
     
-    $testunif((x_1),(x_2))\ \land \ att(x_1)\ \land \ att(x_2)\ \Rightarrow \ bad$
+    $sel(R) = \{att(x_1)\}$
     \item per tutte le altre proposizioni $sel(R)$ è definita come:\\
     
     $
@@ -126,7 +132,7 @@ La proposizione $R \circ_F R'$ è la combinazione di $R$ e $R'$, in cui $R$ prov
     \begin{cases} 
     \emptyset & \text{se tutti gli elementi di H sono nella forma } \\
     &  att(x) \text{, con x variabile, o testunif(p,p')} \\
-    {F} & \text{dove } F\ \neq \ att(x), F\ \neq \ testunif(p,p'),\\
+    \{F\} & \text{dove } F\ \neq \ att(x), F\ \neq \ testunif(p,p'),\\
     & \text{con } F \in H, \text{ altrimenti}
     \end{cases}
    $
