@@ -34,17 +34,17 @@
 
 \begin{frame}{Outline}
     \begin{itemize}
-        \item Introduzione
+    %    \item Introduzione
         \item Calcolo dei processi
         \item Segretezza forte
         \item Implementazione
         \item Algoritmo di risoluzione
     \end{itemize}
 \end{frame}
-
-\begin{frame}{Introduzione}
-    far vedere esempio con differenza tra segretezza standard e segretezza forte
-\end{frame}
+% Valutare se aggiungere oppure no
+%\begin{frame}{Introduzione}
+%    far vedere esempio con differenza tra segretezza standard e segretezza forte
+%\end{frame}
 
 \section{Calcolo dei processi}
 \subsection{}
@@ -165,11 +165,11 @@
 
 \subsection{}
 \begin{frame}{Semplificazione}
-    \begin{block}{}
-        I passi di semplificazione che possono essere effettuati sono riassunti dalla funzione 
+
+        I passi di semplificazione che possono essere effettuati sono riassunti dalla funzione:\\
+        \begin{center}
             $simplify\ =\ elimtaut\ \circ \ elimattx\ \circ \ simptestuniftrue\ \circ \ simptestuniffalse\ \circ \ repeat(elimvar\ \circ \ instantiate\ \circ \ elimEVar\ \circ \ swap\ \circ \ unify) $
-        
-    \end{block}
+        \end{center}
     
     \begin{block}{}
         L'algoritmo genera la proposizione $bad$ se e solo se $bad$ è derivabile dalle regole del processo. Quindi se non viene generato $bad$ il processo preserva la segretezza forte delle sue variabili libere.
@@ -178,9 +178,9 @@
 
 \begin{frame}{Riferimenti Bibliografici}
     \begin{itemize}
-        \item B. Blanchet, "Automatic proof of strong secrecy for security protocols," IEEE Symposium on Security and Privacy, 2004. Proceedings. 2004, Berkeley, CA, USA, 2004, pp. 86-100.
+        \item B. Blanchet, "Automatic proof of strong secrecy for security protocols, "IEEE Symposium on Security and Privacy, 2004. Proceedings. 2004, Berkeley, CA, USA, 2004, pp. 86-100.
         \item Bruno Blanchet, Ben Smyth, Vincent Cheval, and Marc Sylvestre, "ProVerif 2.00:Automatic Cryptographic Protocol Verifier, User Manual and Tutorial", 2018 
-        \item Jonathan Katz,Yehuda Lindell,"Introduction to Modern Cryptography"
+        \item Jonathan Katz, Yehuda Lindell, "Introduction to Modern Cryptography"
     \end{itemize}
 \end{frame}
 
